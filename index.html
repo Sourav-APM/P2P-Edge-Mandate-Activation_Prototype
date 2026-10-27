@@ -1,0 +1,680 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Per Annum | Growth Plan Deployment</title>
+<style>
+:root {
+  --green-900:#145332;
+  --green-700:#416662;
+  --green-600:#3EA058;
+  --green-500:#60BE74;
+  --green-100:#D2E8D9;
+  --green-50:#EEF6F0;
+  --green-text:#2B7A3F;
+  --text:#1C1C1C;
+  --muted:#708090;
+  --bg:#F0F1F4;
+  --border:#E6E9ED;
+  --white:#FFFFFF;
+}
+* { box-sizing:border-box; }
+body {
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:"SF Pro Display",-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+  font-size:14px;
+}
+button,input { font:inherit; }
+button { cursor:pointer; }
+button:focus-visible,a:focus-visible,input:focus-visible + .switch-track {
+  outline:3px solid var(--green-500);
+  outline-offset:3px;
+}
+[hidden] { display:none !important; }
+
+/* Initial prototype configuration */
+.setup-screen {
+  min-height:100vh;
+  display:grid;
+  place-items:center;
+  padding:22px;
+  background:var(--bg);
+}
+.setup-card {
+  width:100%;
+  max-width:450px;
+  background:white;
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:30px;
+  box-shadow:0 8px 32px #15271b0a;
+}
+.brand {
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-size:21px;
+  font-weight:750;
+  margin-bottom:35px;
+}
+.brand-mark {
+  width:27px;
+  height:29px;
+  display:grid;
+  place-items:center;
+  border-radius:5px;
+  background:var(--text);
+  color:white;
+}
+.kicker {
+  font-size:10px;
+  font-weight:750;
+  letter-spacing:.8px;
+  color:var(--green-text);
+  text-transform:uppercase;
+  margin-bottom:9px;
+}
+.setup-card h1 {
+  font-size:25px;
+  letter-spacing:-.5px;
+  line-height:1.25;
+  margin:0 0 10px;
+}
+.setup-copy {
+  font-size:13px;
+  line-height:1.6;
+  color:#65716A;
+  margin:0 0 24px;
+}
+.setup-choice {
+  border:1px solid var(--border);
+  border-radius:13px;
+  padding:16px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px;
+  margin-bottom:19px;
+}
+.choice-title { font-weight:650; }
+.choice-description {
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.45;
+  margin-top:5px;
+}
+.switch {
+  position:relative;
+  display:block;
+  width:48px;
+  height:28px;
+  flex-shrink:0;
+}
+.switch input {
+  position:absolute;
+  opacity:0;
+  width:1px;
+  height:1px;
+}
+.switch-track {
+  position:absolute;
+  inset:0;
+  border-radius:30px;
+  background:#C9D0D5;
+  transition:background .18s;
+}
+.switch-track::after {
+  content:"";
+  position:absolute;
+  width:22px;
+  height:22px;
+  left:3px;
+  top:3px;
+  border-radius:50%;
+  background:white;
+  box-shadow:0 1px 3px #0002;
+  transition:transform .18s;
+}
+.switch input:checked + .switch-track { background:var(--green-600); }
+.switch input:checked + .switch-track::after { transform:translateX(20px); }
+.button {
+  min-height:46px;
+  border-radius:11px;
+  padding:12px 16px;
+  font-weight:650;
+  border:1px solid transparent;
+  text-decoration:none;
+  display:inline-flex;
+  justify-content:center;
+  align-items:center;
+}
+.primary { background:var(--green-900); color:white; }
+.primary:hover { background:#103F27; }
+.secondary { background:white; color:var(--text); border-color:#D8DEE5; }
+.full { width:100%; }
+.setup-note {
+  color:var(--muted);
+  font-size:11px;
+  line-height:1.5;
+  margin:15px 0 0;
+}
+
+/* Portfolio page */
+.app { min-height:100vh; display:grid; grid-template-columns:230px minmax(0,1fr); }
+.sidebar { background:white; border-right:1px solid var(--border); }
+.side-brand {
+  height:78px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:0 24px;
+  border-bottom:1px solid var(--border);
+  font-size:21px;
+  font-weight:750;
+}
+.nav-label { padding:24px 24px 12px; color:var(--muted); font-size:11px; letter-spacing:.6px; }
+.nav-item { padding:14px 24px; }
+.nav-item.active { background:var(--green-50); color:var(--green-900); border-right:3px solid var(--green-600); font-weight:650; }
+.topbar {
+  height:78px;
+  background:white;
+  border-bottom:1px solid var(--border);
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  gap:20px;
+  padding:0 30px;
+}
+.reward { padding:10px 15px; background:#FEF3E2; color:#805318; border-radius:25px; font-size:12px; }
+.profile { display:flex; align-items:center; gap:10px; }
+.avatar { width:35px; height:35px; border-radius:50%; background:var(--green-600); color:white; display:grid; place-items:center; font-weight:700; }
+.page { max-width:1450px; margin:auto; padding:26px 34px 50px; }
+.breadcrumb { display:flex; gap:12px; margin-bottom:28px; font-size:16px; }
+.muted { color:var(--muted); }
+.page-title { font-size:24px; margin:0 0 8px; }
+.subtitle { color:var(--muted); margin-bottom:26px; }
+.layout { display:grid; grid-template-columns:minmax(0,1.55fr) minmax(260px,.8fr); gap:24px; }
+.section-label { font-size:11px; letter-spacing:.6px; color:var(--muted); margin-bottom:14px; }
+.card,.summary,.status { background:white; border:1px solid var(--border); border-radius:14px; overflow:hidden; margin-bottom:20px; }
+.card-heading { padding:19px; background:#F8FAFB; font-size:16px; font-weight:650; }
+.plans { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:10px; padding:17px; }
+.plan { border:1px solid #DDE4EB; border-radius:12px; padding:14px 3px; text-align:center; }
+.plan.selected { border-color:var(--green-600); }
+.plan strong { display:block; font-size:21px; }
+.plan span { display:block; color:var(--muted); margin:5px 0; }
+.plan small { color:var(--green-text); }
+.deploy-row { display:flex; align-items:center; gap:12px; padding:20px; border-top:1px solid var(--border); }
+.fake-check { width:19px; height:19px; border:1px solid #BBC8C0; border-radius:4px; flex-shrink:0; }
+.fake-check.on { background:var(--green-500); border-color:var(--green-500); }
+.row-content { flex:1; min-width:0; }
+.row-detail { color:var(--muted); margin-top:9px; }
+.green-link { color:var(--green-text); margin-top:12px; }
+.amount { white-space:nowrap; font-weight:600; }
+.info-card { padding:22px; background:var(--green-900); color:white; border-radius:14px; margin-bottom:20px; }
+.info-card h3 { margin:0 0 9px; font-size:17px; }
+.info-card p { margin:0; color:#D7E8DC; line-height:1.55; }
+.summary,.status { padding:20px; }
+.summary h3,.status h3 { margin:0 0 12px; font-size:15px; }
+.summary-amount { font-size:25px; font-weight:750; margin-bottom:18px; }
+.status-row { display:flex; justify-content:space-between; gap:12px; padding:12px 0; border-top:1px solid var(--border); }
+
+/* Success confirmation */
+.toast {
+  position:fixed;
+  top:22px;
+  left:50%;
+  transform:translateX(-50%);
+  z-index:120;
+  width:max-content;
+  max-width:calc(100% - 28px);
+  padding:13px 18px;
+  border-radius:12px;
+  background:#145332;
+  color:white;
+  box-shadow:0 8px 30px #0002;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  line-height:1.45;
+}
+.toast-icon {
+  width:22px;
+  height:22px;
+  display:grid;
+  place-items:center;
+  background:#ffffff25;
+  border-radius:50%;
+  flex-shrink:0;
+}
+
+/* One contextual popup at a time */
+.overlay {
+  position:fixed;
+  inset:0;
+  z-index:100;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:18px;
+  background:#16231c99;
+  backdrop-filter:blur(3px);
+}
+.overlay[hidden] { display:none; }
+.modal {
+  width:min(100%,460px);
+  background:white;
+  border-radius:18px;
+  position:relative;
+  box-shadow:0 20px 70px #12231933;
+  animation:appear .18s ease-out;
+}
+.modal-inner { padding:25px 27px 23px; }
+.close {
+  position:absolute;
+  right:12px;
+  top:12px;
+  z-index:2;
+  width:32px;
+  height:32px;
+  border:1px solid var(--border);
+  border-radius:50%;
+  background:white;
+  color:#58665E;
+  font-size:20px;
+}
+.hero {
+  height:78px;
+  background:var(--green-50);
+  border-radius:13px;
+  display:grid;
+  place-items:center;
+  margin-bottom:16px;
+}
+.hero svg { width:53px; height:53px; }
+.eyebrow {
+  text-align:center;
+  color:var(--green-text);
+  font-size:10px;
+  font-weight:750;
+  letter-spacing:.8px;
+  text-transform:uppercase;
+  margin-bottom:8px;
+}
+.modal h2 {
+  font-size:23px;
+  line-height:1.25;
+  letter-spacing:-.4px;
+  text-align:center;
+  margin:0 0 10px;
+}
+.modal-copy {
+  text-align:center;
+  font-size:12px;
+  color:#5F6C64;
+  line-height:1.55;
+  margin:0 auto 16px;
+}
+.benefits { display:grid; gap:10px; margin:0 0 15px; }
+.benefit {
+  display:flex;
+  align-items:flex-start;
+  gap:10px;
+  font-size:12px;
+  line-height:1.45;
+  color:#526158;
+}
+.tick {
+  width:20px;
+  height:20px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  background:var(--green-100);
+  color:var(--green-900);
+  font-weight:800;
+  flex-shrink:0;
+}
+.disclosure {
+  padding:10px 11px;
+  background:#F7F8F7;
+  border-radius:9px;
+  color:#65716A;
+  font-size:10px;
+  line-height:1.45;
+  margin-bottom:14px;
+}
+.actions { display:grid; gap:8px; }
+.actions a,.actions button { width:100%; min-height:44px; }
+.modal-foot { text-align:center; color:var(--muted); font-size:10px; line-height:1.4; margin-top:11px; }
+@keyframes appear { from { opacity:0; transform:translateY(7px); } to { opacity:1; transform:translateY(0); } }
+
+@media(max-width:900px) {
+  .app { grid-template-columns:72px minmax(0,1fr); }
+  .side-brand { justify-content:center; padding:0; font-size:0; }
+  .nav-label { text-align:center; padding:20px 0 10px; font-size:9px; }
+  .nav-item { text-align:center; padding:16px 0; font-size:0; }
+  .page { padding:22px 20px 35px; }
+  .layout { grid-template-columns:1fr; }
+}
+@media(max-width:560px) {
+  .app { display:block; }
+  .sidebar { display:none; }
+  .topbar { height:64px; padding:0 14px; }
+  .page { padding:18px 13px 30px; }
+  .page-title { font-size:21px; }
+  .breadcrumb { font-size:14px; }
+  .plans { gap:6px; padding:11px; }
+  .plan { padding:12px 2px; }
+  .plan strong { font-size:17px; }
+  .plan span { font-size:11px; }
+  .overlay { padding:12px; }
+  .modal { width:100%; max-width:400px; }
+  .modal-inner { padding:21px 18px 18px; }
+  .hero { height:64px; margin-bottom:13px; }
+  .hero svg { width:44px; height:44px; }
+  .modal h2 { font-size:21px; }
+  .modal-copy { font-size:11px; margin-bottom:13px; }
+  .benefits { gap:8px; margin-bottom:12px; }
+  .benefit { font-size:11px; }
+  .disclosure { font-size:9px; margin-bottom:11px; }
+  .actions a,.actions button { min-height:42px; }
+}
+@media(max-width:360px) {
+  .modal-inner { padding:19px 14px 15px; }
+  .modal h2 { font-size:19px; }
+  .hero { height:55px; }
+  .benefit { font-size:10px; }
+}
+@media(prefers-reduced-motion:reduce) {
+  *,*::before,*::after { animation:none!important; transition:none!important; }
+}
+</style>
+</head>
+<body>
+
+<!-- Step 1: Prototype viewer configuration -->
+<section class="setup-screen" id="setupScreen">
+  <div class="setup-card">
+    <div class="brand"><span class="brand-mark">₹</span>Per Annum</div>
+    <div class="kicker">Prototype setup</div>
+    <h1>Mandate status</h1>
+    <p class="setup-copy">Before exploring the prototype, select whether the user has already set up a mandate. This determines which message appears after a successful deployment.</p>
+
+    <div class="setup-choice">
+      <div>
+        <div class="choice-title">Mandate already set up?</div>
+        <div class="choice-description" id="setupDescription">OFF · The user has not set up a mandate.</div>
+      </div>
+      <label class="switch">
+        <input type="checkbox" id="setupToggle" aria-label="Mandate already set up">
+        <span class="switch-track"></span>
+      </label>
+    </div>
+
+    <button class="button primary full" id="enterPrototype">Continue to prototype</button>
+    <p class="setup-note">This setting is only for testing the prototype. It does not change any real mandate.</p>
+  </div>
+</section>
+
+<!-- Step 2: Per Annum portfolio prototype -->
+<div class="app" id="app" hidden>
+  <aside class="sidebar">
+    <div class="side-brand"><span class="brand-mark">₹</span>Per Annum</div>
+    <div class="nav-label">GENERAL</div>
+    <div class="nav-item">⌂ &nbsp; Home</div>
+    <div class="nav-item active">◔ &nbsp; Portfolio</div>
+    <div class="nav-item">♙ &nbsp; Profile</div>
+    <div class="nav-item">♧ &nbsp; Rewards</div>
+    <div class="nav-label">PRODUCTS</div>
+    <div class="nav-item">▤ &nbsp; Estates</div>
+    <div class="nav-item">♧ &nbsp; P2P Edge</div>
+    <div class="nav-item">▥ &nbsp; NCDs</div>
+    <div class="nav-label">MORE</div>
+    <div class="nav-item">▣ &nbsp; Reports</div>
+    <div class="nav-item">⇄ &nbsp; Transactions</div>
+  </aside>
+
+  <main>
+    <header class="topbar">
+      <div class="reward">◉ &nbsp; REWARDS &nbsp; ₹3,155</div>
+      <div class="profile"><div><strong>Rohit</strong><br><span class="muted">525</span></div><div class="avatar">R</div></div>
+    </header>
+
+    <section class="page">
+      <div class="breadcrumb"><span class="muted">Growth Plan</span><span class="muted">›</span><strong>Undeployed funds</strong></div>
+      <h1 class="page-title">Deploy your funds</h1>
+      <p class="subtitle">Choose where you would like to deploy your available balance.</p>
+
+      <div class="layout">
+        <section>
+          <div class="section-label">CHOOSE WHAT TO DEPLOY</div>
+          <div class="card">
+            <div class="card-heading">Select a product</div>
+            <div class="plans">
+              <div class="plan selected"><strong>45</strong><span>Days</span><small>18% to 20%</small></div>
+              <div class="plan"><strong>6</strong><span>Months</span><small>10% to 12%</small></div>
+              <div class="plan"><strong>2</strong><span>Months</span><small>10% to 12%</small></div>
+              <div class="plan"><strong>12</strong><span>Months</span><small>10% to 12%</small></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="deploy-row">
+              <div class="fake-check"></div>
+              <div class="row-content"><strong>Deploy</strong><div class="row-detail">Repayments</div><div class="green-link">Edit Details ⌄</div></div>
+              <div class="amount">₹0</div>
+            </div>
+            <div class="deploy-row">
+              <div class="fake-check on"></div>
+              <div class="row-content"><strong>Deploy <span class="muted" style="font-weight:400">(Default Selected)</span></strong><div class="row-detail">Partial Deposits</div></div>
+              <div class="amount">₹50,88,462</div>
+            </div>
+          </div>
+        </section>
+
+        <aside>
+          <div class="info-card">
+            <h3>Growth X Plan</h3>
+            <p>Eligible repayments can be redeployed into loans through e-mandates, helping your money keep working for you.</p>
+          </div>
+          <div class="summary">
+            <h3>Total deployment</h3>
+            <div class="summary-amount">₹50,88,462</div>
+            <button class="button primary full" id="deployButton">Proceed</button>
+          </div>
+          <div class="status">
+            <h3>Deployment summary</h3>
+            <div class="status-row"><span class="muted">Plan</span><span>Growth X</span></div>
+            <div class="status-row"><span class="muted">Deployment status</span><span id="deploymentStatus">Ready to deploy</span></div>
+            <div class="status-row"><span class="muted">Lock-in mandate</span><strong id="mandateStatus">OFF</strong></div>
+          </div>
+        </aside>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- Deployment confirmation -->
+<div class="toast" id="successToast" role="status" aria-live="polite" hidden>
+  <span class="toast-icon">✓</span>
+  <span>Funds deployed successfully.</span>
+</div>
+
+<!-- One contextual mandate popup -->
+<div class="overlay" id="overlay" hidden>
+  <section class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <button class="close" id="closeModal" aria-label="Close popup">×</button>
+    <div class="modal-inner" id="modalContent"></div>
+  </section>
+</div>
+
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const setupScreen = $('setupScreen');
+  const app = $('app');
+  const setupToggle = $('setupToggle');
+  const overlay = $('overlay');
+  const content = $('modalContent');
+  const toast = $('successToast');
+
+  let mandateAlreadySetUp = false;
+  let previousFocus = null;
+  let deploymentStarted = false;
+  let toastTimer = null;
+  let popupTimer = null;
+
+  const iconSetup = `
+    <svg viewBox="0 0 64 64" fill="none" aria-hidden="true">
+      <rect x="8" y="25" width="48" height="32" rx="6" fill="#D2E8D9"/>
+      <path d="M17 25V19C17 10.7 23.7 5 32 5S47 10.7 47 19V25" stroke="#145332" stroke-width="4" stroke-linecap="round"/>
+      <rect x="27" y="34" width="10" height="12" rx="3" fill="#145332"/>
+      <path d="M32 37V42" stroke="white" stroke-width="2" stroke-linecap="round"/>
+    </svg>`;
+
+  const iconCycle = `
+    <svg viewBox="0 0 64 64" fill="none" aria-hidden="true">
+      <circle cx="32" cy="32" r="28" fill="#D2E8D9"/>
+      <path d="M44 23A15 15 0 0 0 19 22L15 27M15 27V18M15 27H24" stroke="#145332" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M20 41A15 15 0 0 0 45 42L49 37M49 37V46M49 37H40" stroke="#3EA058" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>`;
+
+  function updateSetupDescription() {
+    $('setupDescription').textContent = setupToggle.checked
+      ? 'ON · The user already has a mandate.'
+      : 'OFF · The user has not set up a mandate.';
+  }
+
+  setupToggle.addEventListener('change', updateSetupDescription);
+
+  $('enterPrototype').addEventListener('click', () => {
+    mandateAlreadySetUp = setupToggle.checked;
+    setupScreen.hidden = true;
+    app.hidden = false;
+    $('mandateStatus').textContent = mandateAlreadySetUp ? 'OFF' : 'Not set up';
+    $('mandateStatus').style.color = mandateAlreadySetUp ? '' : 'var(--muted)';
+    $('deploymentStatus').textContent = 'Ready to deploy';
+    window.scrollTo(0, 0);
+  });
+
+  function closePopup() {
+    overlay.hidden = true;
+    document.body.style.overflow = '';
+    if (previousFocus) previousFocus.focus();
+  }
+
+  function showPopup() {
+    previousFocus = document.activeElement;
+    overlay.hidden = false;
+    document.body.style.overflow = 'hidden';
+
+    if (mandateAlreadySetUp) {
+      renderEnablePopup();
+    } else {
+      renderSetupPopup();
+    }
+
+    $('closeModal').focus();
+  }
+
+  function renderSetupPopup() {
+    content.innerHTML = `
+      <div class="hero">${iconSetup}</div>
+      <div class="eyebrow">Keep your money working</div>
+      <h2 id="modalTitle">Put your repayments back to work</h2>
+      <p class="modal-copy">
+        Set up your mandate to automatically redeploy eligible repayments into loans, without having to do it manually each time.
+      </p>
+      <div class="benefits">
+        <div class="benefit">
+          <span class="tick">✓</span>
+          <span><strong>Save time.</strong> Eligible repayments can be redeployed automatically.</span>
+        </div>
+        <div class="benefit">
+          <span class="tick">↻</span>
+          <span><strong>Earn returns again.</strong> Redeployed repayments can generate further returns when placed into available loans.</span>
+        </div>
+      </div>
+      <div class="disclosure">
+        Setting up a mandate does not activate it for this lock-in. Returns are not guaranteed and depend on lending outcomes.
+      </div>
+      <div class="actions">
+        <a class="button primary full" href="https://www.perannum.money/mandate/create">Set Up Mandate</a>
+        <button class="button secondary" id="laterButton">Maybe Later</button>
+      </div>
+      <div class="modal-foot">You can decide whether to enable the mandate for each eligible lock-in.</div>
+    `;
+    $('laterButton').addEventListener('click', closePopup);
+  }
+
+  function renderEnablePopup() {
+    content.innerHTML = `
+      <div class="hero">${iconCycle}</div>
+      <div class="eyebrow">Make repayments work for you</div>
+      <h2 id="modalTitle">Let your repayments keep working for you</h2>
+      <p class="modal-copy">
+        Enable the mandate for this lock-in to redeploy eligible repayments automatically and give your money more opportunities to earn returns again.
+      </p>
+      <div class="benefits">
+        <div class="benefit">
+          <span class="tick">✓</span>
+          <span><strong>Less manual work.</strong> No need to redeploy every eligible repayment yourself.</span>
+        </div>
+        <div class="benefit">
+          <span class="tick">↻</span>
+          <span><strong>Keep earning.</strong> Redeployed repayments can generate further returns when placed into available loans.</span>
+        </div>
+      </div>
+      <div class="disclosure">
+        When enabled, eligible amounts may be collected from your linked bank account without a separate approval each time. Returns and loan availability are not guaranteed.
+      </div>
+      <div class="actions">
+        <a class="button primary full" href="https://www.perannum.money/portfolio">Enable Mandate</a>
+        <button class="button secondary" id="laterButton">Maybe Later</button>
+      </div>
+      <div class="modal-foot">This action applies to the selected lock-in.</div>
+    `;
+    $('laterButton').addEventListener('click', closePopup);
+  }
+
+  $('deployButton').addEventListener('click', () => {
+    if (deploymentStarted) return;
+
+    deploymentStarted = true;
+    $('deployButton').disabled = true;
+    $('deployButton').textContent = 'Deployment successful';
+    $('deployButton').style.opacity = '.75';
+    $('deploymentStatus').textContent = 'Successful';
+    $('deploymentStatus').style.color = 'var(--green-text)';
+
+    toast.hidden = false;
+    window.scrollTo(0, 0);
+
+    clearTimeout(toastTimer);
+    clearTimeout(popupTimer);
+
+    toastTimer = setTimeout(() => {
+      toast.hidden = true;
+    }, 1700);
+
+    popupTimer = setTimeout(() => {
+      showPopup();
+    }, 800);
+  });
+
+  $('closeModal').addEventListener('click', closePopup);
+
+  overlay.addEventListener('click', event => {
+    if (event.target === overlay) closePopup();
+  });
+
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape' && !overlay.hidden) closePopup();
+  });
+})();
+</script>
+</body>
+</html>
